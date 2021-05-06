@@ -4811,14 +4811,7 @@ pub fn (mut c Checker) expr(node ast.Expr) ast.Type {
 			return node.typ
 		}
 		ast.AnonFn {
-			c.inside_anon_fn = true
-			keep_fn := c.table.cur_fn
-			c.table.cur_fn = unsafe { &node.decl }
-			c.stmts(node.decl.stmts)
-			c.fn_decl(mut node.decl)
-			c.table.cur_fn = keep_fn
-			c.inside_anon_fn = false
-			return node.typ
+			return c.anon_fn(mut node)
 		}
 		ast.ArrayDecompose {
 			typ := c.expr(node.expr)
@@ -7638,6 +7631,29 @@ fn (mut c Checker) fn_decl(mut node ast.FnDecl) {
 	}
 	c.returns = false
 	node.source_file = c.file
+}
+
+fn (mut c Checker) anon_fn(mut node ast.AnonFn) ast.Type {
+	keep_fn := c.table.cur_fn
+	keep_inside_anon := c.inside_anon_fn
+	defer {
+		c.table.cur_fn = keep_fn
+		c.inside_anon_fn = keep_inside_anon
+	}
+	c.table.cur_fn = unsafe { &node.decl }
+	c.inside_anon_fn = true
+	for mut var in node.inherited_vars {
+		parent_var := node.decl.scope.parent.find_var(var.name) or {
+			panic('unexpected checker error: cannot find parent of inherited variable `$var.name`')
+		}
+		if var.is_mut && !parent_var.is_mut {
+			c.error('original `$parent_var.name` is immutable, declare it with `mut` to make it mutable',
+				var.pos)
+		}
+		var.typ = parent_var.typ
+	}
+	c.fn_decl(mut node.decl)
+	return node.typ
 }
 
 // NB: has_top_return/1 should be called on *already checked* stmts,
