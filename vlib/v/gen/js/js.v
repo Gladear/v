@@ -421,7 +421,7 @@ fn (mut g JsGen) write_v_source_line_info(pos token.Position) {
 fn (mut g JsGen) stmt(node ast.Stmt) {
 	g.stmt_start_pos = g.ns.out.len
 	match node {
-		ast.EmptyStmt {}
+		ast.CStmt, ast.EmptyStmt {}
 		ast.AsmStmt {
 			panic('inline asm is not supported by js')
 		}

@@ -55,7 +55,7 @@ pub fn (mut w Walker) mark_exported_fns() {
 
 pub fn (mut w Walker) stmt(node ast.Stmt) {
 	match mut node {
-		ast.EmptyStmt {}
+		ast.CStmt, ast.EmptyStmt {}
 		ast.AsmStmt {
 			w.asm_io(node.output)
 			w.asm_io(node.input)

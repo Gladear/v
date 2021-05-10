@@ -381,7 +381,7 @@ pub fn (mut f Fmt) stmt(node ast.Stmt) {
 		eprintln('stmt: ${node.pos:-42} | node: ${node.type_name():-20}')
 	}
 	match node {
-		ast.EmptyStmt, ast.NodeError {}
+		ast.CStmt, ast.EmptyStmt, ast.NodeError {}
 		ast.AsmStmt {
 			f.asm_stmt(node)
 		}

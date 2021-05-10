@@ -1215,6 +1215,9 @@ fn (mut g Gen) stmt(node ast.Stmt) {
 		ast.CompFor {
 			g.comp_for(node)
 		}
+		ast.CStmt {
+			g.writeln(node.value)
+		}
 		ast.DeferStmt {
 			mut defer_stmt := node
 			defer_stmt.ifdef = g.defer_ifdef

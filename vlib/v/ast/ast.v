@@ -17,10 +17,10 @@ pub type Expr = AnonFn | ArrayDecompose | ArrayInit | AsCast | Assoc | AtExpr | 
 	PostfixExpr | PrefixExpr | RangeExpr | SelectExpr | SelectorExpr | SizeOf | SqlExpr |
 	StringInterLiteral | StringLiteral | StructInit | TypeNode | TypeOf | UnsafeExpr
 
-pub type Stmt = AsmStmt | AssertStmt | AssignStmt | Block | BranchStmt | CompFor | ConstDecl |
-	DeferStmt | EmptyStmt | EnumDecl | ExprStmt | FnDecl | ForCStmt | ForInStmt | ForStmt |
-	GlobalDecl | GotoLabel | GotoStmt | HashStmt | Import | InterfaceDecl | Module | NodeError |
-	Return | SqlStmt | StructDecl | TypeDecl
+pub type Stmt = AsmStmt | AssertStmt | AssignStmt | Block | BranchStmt | CStmt | CompFor |
+	ConstDecl | DeferStmt | EmptyStmt | EnumDecl | ExprStmt | FnDecl | ForCStmt | ForInStmt |
+	ForStmt | GlobalDecl | GotoLabel | GotoStmt | HashStmt | Import | InterfaceDecl |
+	Module | NodeError | Return | SqlStmt | StructDecl | TypeDecl
 
 pub type ScopeObject = AsmRegister | ConstField | GlobalField | Var
 
@@ -1643,6 +1643,15 @@ pub fn (stmt Stmt) check_c_expr() ? {
 		else {}
 	}
 	return error('unsupported statement (`$stmt.type_name()`)')
+}
+
+// CStmt is used in cgen only. The gen will write out the exact line
+// hold in `value`. `pos` is never filled but necessary as every Stmt
+// has a `pos` field.
+pub struct CStmt {
+pub:
+	value string
+	pos   token.Position
 }
 
 // CTempVar is used in cgen only, to hold nodes for temporary variables

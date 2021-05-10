@@ -4113,6 +4113,12 @@ fn (mut c Checker) stmt(node ast.Stmt) {
 				print_backtrace()
 			}
 		}
+		ast.CStmt {
+			if c.pref.is_verbose {
+				eprintln('Checker.stmt() CStmt')
+				print_backtrace()
+			}
+		}
 		ast.NodeError {}
 		ast.AsmStmt {
 			c.asm_stmt(mut node)
