@@ -1,4 +1,3 @@
-/*
 fn test_decl_assignment() {
 	my_var := 12
 	c1 := fn [my_var] () int {
@@ -6,9 +5,7 @@ fn test_decl_assignment() {
 	}
 	assert c1() == 12
 }
-*/
 
-/*
 fn test_assignment() {
 	v1 := 1
 	mut c := fn [v1] () int {
@@ -20,9 +17,7 @@ fn test_assignment() {
 	}
 	assert c() == 3
 }
-*/
 
-/*
 fn call_anon_with_3(f fn (int) int) int {
 	return f(3)
 }
@@ -33,6 +28,34 @@ fn test_closure_in_call() {
 		return my_var + add
 	})
 	assert r1 == 15
+}
+
+/*
+fn create_simple_counter() fn () int {
+	mut c := -1
+	return fn [mut c] () int {
+		c++
+		return c
+	}
+}
+
+fn override_stack() {
+	// just create some variables to modify the stack
+	a := 1
+	b := a + 2
+	c := b + 3
+	d := c + 4
+	e := d + 5
+	f := e + 6
+	g := f + 7
+	_ = g
+}
+
+fn test_closure_exit_original_scope() {
+	mut c := create_simple_counter()
+	assert c() == 0
+	override_stack()
+	assert c() == 1
 }
 */
 
@@ -51,7 +74,6 @@ fn test_vars_are_changed() {
 }
 */
 
-/*
 struct Counter {
 mut:
 	i u64
@@ -66,9 +88,10 @@ fn (mut c Counter) next() u64 {
 	return c.i
 }
 
+/*
 fn test_call_methods() {
 	mut c := Counter{}
-	f1 := fn [c] () u64 {
+	f1 := fn [mut c] () u64 {
 		return c.next()
 	}
 	assert f1() == 1

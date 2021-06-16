@@ -175,6 +175,7 @@ mut:
 	expected_cast_type ast.Type // for match expr of sumtypes
 	defer_vars         []string
 	anon_fn            bool
+	nr_closures        int
 }
 
 pub fn gen(files []&ast.File, table &ast.Table, pref &pref.Preferences) string {
@@ -374,6 +375,10 @@ pub fn gen(files []&ast.File, table &ast.Table, pref &pref.Preferences) string {
 		}
 	}
 	if g.anon_fn_definitions.len > 0 {
+		if g.nr_closures > 0 {
+			b.writeln('\n// V closure helpers')
+			b.writeln(c_closure_helpers())
+		}
 		for fn_def in g.anon_fn_definitions {
 			b.writeln(fn_def)
 		}
@@ -3078,10 +3083,7 @@ fn (mut g Gen) expr(node ast.Expr) {
 			g.error('g.expr(): unhandled EmptyExpr', token.Position{})
 		}
 		ast.AnonFn {
-			// TODO: dont fiddle with buffers
-			g.gen_anon_fn_decl(mut node)
-			fsym := g.table.get_type_symbol(node.typ)
-			g.write(fsym.name)
+			g.gen_anon_fn(mut node)
 		}
 		ast.ArrayDecompose {
 			g.expr(node.expr)
@@ -4235,6 +4237,9 @@ fn (mut g Gen) ident(node ast.Ident) {
 					}
 					return
 				}
+			}
+			if v.is_inherited {
+				g.write(closure_ctx + '->')
 			}
 		}
 	} else if node_info is ast.IdentFn {
@@ -5820,8 +5825,7 @@ fn (mut g Gen) go_expr(node ast.GoExpr) {
 		name = receiver_sym.name + '_' + name
 	} else if mut expr.left is ast.AnonFn {
 		g.gen_anon_fn_decl(mut expr.left)
-		fsym := g.table.get_type_symbol(expr.left.typ)
-		name = fsym.name
+		name = expr.left.decl.name
 	}
 	name = util.no_dots(name)
 	if g.pref.obfuscate && g.cur_mod.name == 'main' && name.starts_with('main__') {
