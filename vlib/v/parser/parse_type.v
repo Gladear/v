@@ -516,7 +516,7 @@ pub fn (mut p Parser) parse_generic_template_type(name string) ast.Type {
 		name: name
 		cname: util.no_dots(name)
 		mod: p.mod
-		kind: .any
+		kind: .generic_type
 		is_public: true
 	})
 	return ast.new_type(idx).set_flag(.generic)

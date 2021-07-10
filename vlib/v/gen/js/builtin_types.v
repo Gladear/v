@@ -151,15 +151,15 @@ pub fn (mut g JsGen) typ(t ast.Type) string {
 		.chan {
 			styp = 'chan'
 		}
+		.generic_type {
+			styp = 'any'
+		}
 		// 'map[string]int' => 'Map<string, number>'
 		.map {
 			info := sym.info as ast.Map
 			key := g.typ(info.key_type)
 			val := g.typ(info.value_type)
 			styp = 'Map<$key, $val>'
-		}
-		.any {
-			styp = 'any'
 		}
 		// ns.Foo => alias["Foo"]["prototype"]
 		.struct_ {

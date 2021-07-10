@@ -6812,7 +6812,7 @@ pub fn (mut c Checker) index_expr(mut node ast.IndexExpr) ast.Type {
 				node.is_farray = true
 				break
 			}
-			.any {
+			.generic_type {
 				gname := typ_sym.name
 				typ = c.unwrap_generic(typ)
 				node.left_type = typ

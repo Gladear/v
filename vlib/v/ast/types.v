@@ -364,11 +364,10 @@ pub const (
 	map_type_idx           = 21
 	chan_type_idx          = 22
 	size_t_type_idx        = 23
-	any_type_idx           = 24
-	float_literal_type_idx = 25
-	int_literal_type_idx   = 26
-	thread_type_idx        = 27
-	error_type_idx         = 28
+	float_literal_type_idx = 24
+	int_literal_type_idx   = 25
+	thread_type_idx        = 26
+	error_type_idx         = 27
 )
 
 pub const (
@@ -408,7 +407,6 @@ pub const (
 	array_type         = new_type(array_type_idx)
 	map_type           = new_type(map_type_idx)
 	chan_type          = new_type(chan_type_idx)
-	any_type           = new_type(any_type_idx)
 	float_literal_type = new_type(float_literal_type_idx)
 	int_literal_type   = new_type(int_literal_type_idx)
 	thread_type        = new_type(thread_type_idx)
@@ -480,7 +478,7 @@ pub enum Kind {
 	array_fixed
 	map
 	chan
-	any
+	generic_type
 	struct_
 	generic_struct_inst
 	multi_return
@@ -612,7 +610,6 @@ pub fn (mut t Table) register_builtin_type_symbols() {
 	t.register_type_symbol(kind: .map, name: 'map', cname: 'map', mod: 'builtin')
 	t.register_type_symbol(kind: .chan, name: 'chan', cname: 'chan', mod: 'builtin')
 	t.register_type_symbol(kind: .size_t, name: 'size_t', cname: 'size_t', mod: 'builtin')
-	t.register_type_symbol(kind: .any, name: 'any', cname: 'any', mod: 'builtin')
 	t.register_type_symbol(
 		kind: .float_literal
 		name: 'float literal'
@@ -706,11 +703,11 @@ pub fn (k Kind) str() string {
 		.array_fixed { 'array_fixed' }
 		.map { 'map' }
 		.chan { 'chan' }
+		.generic_type { 'generic_type' }
 		.multi_return { 'multi_return' }
 		.sum_type { 'sum_type' }
 		.alias { 'alias' }
 		.enum_ { 'enum' }
-		.any { 'any' }
 		.function { 'function' }
 		.interface_ { 'interface' }
 		.generic_struct_inst { 'generic_struct_inst' }

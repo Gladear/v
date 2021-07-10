@@ -98,7 +98,7 @@ pub fn (mut c Checker) check_basic(got ast.Type, expected ast.Type) bool {
 	if expected.is_ptr() && unalias_got == ast.int_literal_type {
 		return true
 	}
-	// TODO: use sym so it can be absorbed into below [.voidptr, .any] logic
+	// TODO: use sym so it can be absorbed into below [.voidptr, .generic_type] logic
 	if expected.idx() == ast.array_type_idx || got.idx() == ast.array_type_idx {
 		return true
 	}
@@ -114,7 +114,7 @@ pub fn (mut c Checker) check_basic(got ast.Type, expected ast.Type) bool {
 		// fixed array needs to be a struct, not a pointer
 		return false
 	}
-	if exp_sym.kind in [.voidptr, .any] || got_sym.kind in [.voidptr, .any] {
+	if exp_sym.kind in [.voidptr, .generic_type] || got_sym.kind in [.voidptr, .generic_type] {
 		return true
 	}
 	// sum type

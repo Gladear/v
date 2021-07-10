@@ -605,7 +605,7 @@ fn (mut p Parser) parse_generic_names() []string {
 				name: name
 				cname: util.no_dots(name)
 				mod: p.mod
-				kind: .any
+				kind: .generic_type
 				is_public: true
 			})
 		}

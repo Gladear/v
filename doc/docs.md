@@ -416,8 +416,6 @@ rune // represents a Unicode code point
 f32 f64
 
 voidptr, size_t // these are mostly used for C interoperability
-
-any // similar to C's void* and Go's interface{}
 ```
 
 Please note that unlike C and Go, `int` is always a 32 bit integer.
